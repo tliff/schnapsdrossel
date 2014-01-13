@@ -65,9 +65,12 @@ end
 
 def check_webhook
   Thread.new do 
-    fam, port, *addr = TCPServer.new(8082).accept.getpeername.unpack('nnC4')
-    if valid_sources.any?{|source| source.match addr.join}
-      exit
+    sock = TCPServer.new(8082)
+    loop do
+      fam, port, *addr = sock.accept.getpeername.unpack('nnC4')
+      if VALID_SOURCES.any?{|source| source.match addr.join}
+        exit
+      end
     end
   end
 end
