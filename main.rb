@@ -68,13 +68,15 @@ def check_webhook
     sock = TCPServer.new(8082)
     loop do
       fam, port, *addr = sock.accept.getpeername.unpack('nnC4')
-      if VALID_SOURCES.any?{|source| source.match addr.join}
+      if VALID_SOURCES.any?{|source| source.match addr.join('.')}
         exit
+      else
+        puts "#{addr.join} is not a valid source"
       end
     end
   end
 end
-
+[/^192\.30\.252\./,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
 
 
 bot = Cinch::Bot.new do
