@@ -10,7 +10,8 @@ require 'pp'
 MAX_SIZE = 1024*1024*10
 YOUTUBE_URLS = ['youtube.com', 'youtu.be']
 HTTP_REGEX = /(http:\/\/\S+)/
-VALID_SOURCES = NetAddr::CIDR.create('192.30.252.0/22')
+VALID_SOURCES = [ /^192\.30\.252\./ ,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
+
 
 
 
@@ -64,12 +65,18 @@ end
 
 def check_webhook
   Thread.new do 
-    fam, port, *addr = TCPServer.new(8082).accept.getpeername.unpack('nnC4')
-    if valid_sources.contains?(addr.join)
-      exit
+    sock = TCPServer.new(8082)
+    loop do
+      fam, port, *addr = sock.accept.getpeername.unpack('nnC4')
+      if VALID_SOURCES.any?{|source| source.match addr.join('.')}
+        exit
+      else
+        puts "#{addr.join} is not a valid source"
+      end
     end
+  end
 end
-
+[/^192\.30\.252\./,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
 
 
 bot = Cinch::Bot.new do
