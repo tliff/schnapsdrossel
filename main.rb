@@ -99,7 +99,7 @@ bot = Cinch::Bot.new do
       if message.is_a? Twitter::Tweet
         puts "Tweet by #{message.user.name}: #{message.text}"
         Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): #{message.text}" if !message.retweeted_status
-        Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" if !message.retweeted_status
+        Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" if message.retweeted_status
       end
     end
   end
