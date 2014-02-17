@@ -88,9 +88,9 @@ bot = Cinch::Bot.new do
   end
 
   on :channel do |m|
-    if match = HTTP_REGEX.match(m.message) 
-      check_link match[1]
-    end
+    m.message.scan(HTTP_REGEX){|match|
+      check_link match
+    }
   end
 
   on :connect do |m|
