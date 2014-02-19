@@ -9,7 +9,7 @@ require 'pp'
 
 MAX_SIZE = 1024*1024*10
 YOUTUBE_URLS = ['youtube.com', 'youtu.be']
-HTTP_REGEX = /(http:\/\/\S+)/
+HTTP_REGEX = /(http[s]?:\/\/\S+)/
 VALID_SOURCES = [ /^192\.30\.252\./ ,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
 
 
