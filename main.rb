@@ -95,11 +95,17 @@ bot = Cinch::Bot.new do
 
   on :connect do |m|
     puts "On connect"
-    $client.user do |message|
-      if message.is_a? Twitter::Tweet
-        puts "Tweet by #{message.user.name}: #{message.text}"
-        Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): #{message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
-        Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" if !message.retweeted_status.is_a?(Twitter::NullObject)
+    loop do
+      begin
+        $client.user do |message|
+          if message.is_a? Twitter::Tweet
+            puts "Tweet by #{message.user.name}: #{message.text}"
+            Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): #{message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
+            Channel('#bar').msg "Tweet by #{message.user.name} (#{message.user.screen_name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" if !message.retweeted_status.is_a?(Twitter::NullObject)
+          end
+        end
+      rescue
+        next
       end
     end
   end
