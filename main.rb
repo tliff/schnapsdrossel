@@ -53,7 +53,7 @@ bot = Cinch::Bot.new do
   configure do |c|
     c.server = "underworld.no.quakenet.org"
     c.user = 'schnapsdrossel'
-    c.channels = ["#bartest"]
+    c.channels = ["#bar"]
     c.nicks = ['schnapsdrossel']
   end
 
