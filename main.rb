@@ -4,7 +4,6 @@ require 'uri'
 require 'twitter'
 require 'tumblr_client'
 require 'socket'
-require 'cidr'
 require 'pp'
 
 MAX_SIZE = 1024*1024*10
