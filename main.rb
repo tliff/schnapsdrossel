@@ -50,40 +50,11 @@ def check_link url
   end
 end
 
-def check_urls 
-#  c = Tumblr::Client.new
-#  offset = 0
-#  while (posts = c.posts("shitmybarsays.tumblr.com", :offset => offset)['posts') && !posts.empty?
-#  	$urls += posts.map{|e| 
- #     m = /(http:\/\/\S+)/.match e['body']
- #     m ? m[1].chomp('"') : nil
- ##   }.compact
- #   offset += 20
- # end
- # pp $urls
-end
-
-def check_webhook
-  Thread.new do 
-    sock = TCPServer.new(8082)
-    loop do
-      fam, port, *addr = sock.accept.getpeername.unpack('nnC4')
-      if VALID_SOURCES.any?{|source| source.match addr.join('.')}
-        exit
-      else
-        puts "#{addr.join} is not a valid source"
-      end
-    end
-  end
-end
-[/^192\.30\.252\./,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
-
-
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = "underworld.no.quakenet.org"
     c.user = 'schnapsdrossel'
-    c.channels = ["#bar"]
+    c.channels = ["#bartest"]
     c.nicks = ['schnapsdrossel']
   end
 
@@ -111,8 +82,6 @@ bot = Cinch::Bot.new do
   end
 end
 
-check_urls
-check_webhook
 bot.start
 
 
