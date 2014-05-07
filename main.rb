@@ -54,7 +54,7 @@ bot = Cinch::Bot.new do
   
   on :channel, /^\.eval / do |m|
     if MASTERS.member?(m.user.host)
-      Channel('#bar').msg eval(m.gsub(/^\.eval /,''))
+      Channel('#bar').msg eval(m.message.gsub(/^\.eval /,''))
     end
   end
 
