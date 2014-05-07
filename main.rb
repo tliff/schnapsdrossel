@@ -46,10 +46,15 @@ bot = Cinch::Bot.new do
     }
   end
   
-  on :channel, /^.reload$/ do |m|
-    puts m.user.host
+  on :channel, /^\.reload$/ do |m|
     if MASTERS.member?(m.user.host)
       exit 0
+    end
+  end
+  
+  on :channel, /^\.eval / do |m|
+    if MASTERS.member?(m.user.host)
+      Channel('#bar').msg eval(m.gsub(/^\.eval /,''))
     end
   end
 
