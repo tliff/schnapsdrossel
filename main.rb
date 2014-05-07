@@ -7,16 +7,11 @@ require 'socket'
 require 'pp'
 
 MAX_SIZE = 1024*1024*10
-YOUTUBE_URLS = ['youtube.com', 'youtu.be']
 HTTP_REGEX = /(http[s]?:\/\/\S+)/
-VALID_SOURCES = [ /^192\.30\.252\./ ,/^192\.30\.253\./,/^192\.30\.254\./,/^192\.30\.255\./]
-
-
-
-
-$urls = []
+MASTERS = ['tliff.users.quakenet.org']
 
 require './config.rb'
+$urls = []
 
 def check_link url
   puts "checking #{url}"
@@ -25,26 +20,14 @@ def check_link url
     return
   end
   uri = URI(url)
-  if YOUTUBE_URLS.member?(uri.host)
-    puts "Youtube link: #{url}"    
-  else 
-    Net::HTTP.start(uri.host) do |http|
-      http.open_timeout = 2
-      http.read_timeout = 2
-      req = Net::HTTP::Head.new("#{uri.path}#{uri.query ? '?' + uri.query : ''}")
-      req = http.request(req)
-      if req['content-length'].to_i < MAX_SIZE && req['content-type'] =~ /^image/
-        puts "#{url} matched IMAGE"
-        t = Tumblr::Client.new
-        pp t
-        
-        if r = t.text('shitmybarsays.tumblr.com', :body => "![Alt text](#{url})", :format => "markdown")
-          $urls << url
-          puts "SUCCESS! -- #{r}"
-        else
-          puts "FAIL!!!!"
-        end
-      end
+  Net::HTTP.start(uri.host) do |http|
+    http.open_timeout = 2
+    http.read_timeout = 2
+    req = Net::HTTP::Head.new("#{uri.path}#{uri.query ? '?' + uri.query : ''}")
+    req = http.request(req)
+    if req['content-length'].to_i < MAX_SIZE && req['content-type'] =~ /^image/
+      Tumblr::Client.new.text('shitmybarsays.tumblr.com', :body => "![Alt text](#{url})", :format => "markdown")
+      $urls << url
     end
   end
 end
@@ -61,6 +44,13 @@ bot = Cinch::Bot.new do
     m.message.scan(HTTP_REGEX){|match|
       check_link match.first
     }
+  end
+  
+  on :channel, /^.reload$/ do |m|
+    puts m.user.host
+    if MASTERS.member?(m.user.host)
+      exit 0
+    end
   end
 
   on :connect do |m|
