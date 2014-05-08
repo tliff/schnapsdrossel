@@ -66,7 +66,7 @@ bot = Cinch::Bot.new do
     xml.remove_namespaces!
     track_name = xml.at_xpath('/track/name').content rescue ''
     artist_name = xml.at_xpath('/track/artist/name').content rescue ''
-    m.channel.msg("#{artist_name} – #{track_name}") if !track_name.empty? && !artist_name.empty?
+    m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
 
   on :connect do |m|
