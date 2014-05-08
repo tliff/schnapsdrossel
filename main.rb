@@ -62,7 +62,7 @@ bot = Cinch::Bot.new do
   
   on :channel, /spotify:track:.*/ do |m|
     track = m.message.scan(/(spotify:track:\S+)/).first.first
-    xml = Nokogriri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
+    xml = Nokogiri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
     xml.remove_namespaces!
     track_name = n.at_xpath('/track/name').content rescue ''
     artist_name = n.at_xpath('/track/artist/name').content rescue ''
