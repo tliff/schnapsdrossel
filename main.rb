@@ -6,7 +6,7 @@ require 'tumblr_client'
 require 'socket'
 require 'pp'
 require 'open-uri'
-require 'nokogiri '
+require 'nokogiri'
 
 MAX_SIZE = 1024*1024*10
 HTTP_REGEX = /(http[s]?:\/\/\S+)/
