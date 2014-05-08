@@ -64,9 +64,9 @@ bot = Cinch::Bot.new do
     track = m.message.scan(/(spotify:track:\S+)/).first.first
     xml = Nokogiri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
     xml.remove_namespaces!
-    track_name = n.at_xpath('/track/name').content rescue ''
-    artist_name = n.at_xpath('/track/artist/name').content rescue ''
-    m.channel.msg("#{artist_name} – #{track_name}")
+    track_name = xml.at_xpath('/track/name').content rescue ''
+    artist_name = xml.at_xpath('/track/artist/name').content rescue ''
+    m.channel.msg("#{artist_name} – #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
 
   on :connect do |m|
