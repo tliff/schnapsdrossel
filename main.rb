@@ -5,6 +5,8 @@ require 'twitter'
 require 'tumblr_client'
 require 'socket'
 require 'pp'
+require 'open-uri'
+require 'nokogiri '
 
 MAX_SIZE = 1024*1024*10
 HTTP_REGEX = /(http[s]?:\/\/\S+)/
@@ -54,8 +56,17 @@ bot = Cinch::Bot.new do
   
   on :channel, /^\.eval / do |m|
     if MASTERS.member?(m.user.host)
-      Channel('#bar').msg eval(m.message.gsub(/^\.eval /,''))
+      m.message.channel.msg eval(m.message.gsub(/^\.eval /,''))
     end
+  end
+  
+  on :channel, /spotify:track:.*/ do |m|
+    track = m.message.scan(/(spotify:track:\S+)/).first.first
+    xml = Nokogriri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
+    xml.remove_namespaces!
+    track_name = n.at_xpath('/track/name').content rescue ''
+    artist_name = n.at_xpath('/track/artist/name').content rescue ''
+    m.message.channel.msg("#{artist_name} – #{track_name}")
   end
 
   on :connect do |m|
