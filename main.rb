@@ -56,7 +56,7 @@ bot = Cinch::Bot.new do
   
   on :channel, /^\.eval / do |m|
     if MASTERS.member?(m.user.host)
-      m.message.channel.msg eval(m.message.gsub(/^\.eval /,''))
+      m.channel.msg eval(m.message.gsub(/^\.eval /,''))
     end
   end
   
@@ -66,7 +66,7 @@ bot = Cinch::Bot.new do
     xml.remove_namespaces!
     track_name = n.at_xpath('/track/name').content rescue ''
     artist_name = n.at_xpath('/track/artist/name').content rescue ''
-    m.message.channel.msg("#{artist_name} – #{track_name}")
+    m.channel.msg("#{artist_name} – #{track_name}")
   end
 
   on :connect do |m|
