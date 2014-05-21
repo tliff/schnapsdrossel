@@ -78,7 +78,6 @@ bot = Cinch::Bot.new do
     m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
 
-spotify:album:03JPFQvZRnHHysSZrSFmKY
   on :connect do |m|
     puts "On connect"
     loop do
