@@ -69,6 +69,16 @@ bot = Cinch::Bot.new do
     m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
 
+  on :channel, /spotify:album:.*/ do |m|
+    track = m.message.scan(/(spotify:album:\S+)/).first.first
+    xml = Nokogiri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
+    xml.remove_namespaces!
+    track_name = xml.at_xpath('/album/name').content rescue ''
+    artist_name = xml.at_xpath('/album/artist/name').content rescue ''
+    m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
+  end
+
+spotify:album:03JPFQvZRnHHysSZrSFmKY
   on :connect do |m|
     puts "On connect"
     loop do
