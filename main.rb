@@ -27,7 +27,7 @@ def check_link url
     http.read_timeout = 2
     req = Net::HTTP::Head.new("#{uri.path}#{uri.query ? '?' + uri.query : ''}")
     req = http.request(req)
-    if req['content-length'].to_i < MAX_SIZE && req['content-type'] =~ /^image/
+    if req['content-length'].to_i < MAX_SIZE && (req['content-type'] =~ /^image/ || req['content-type'] =~ /^video\/webm/ )
       Tumblr::Client.new.text('shitmybarsays.tumblr.com', :body => "![Alt text](#{url})", :format => "markdown")
       $urls << url
     end
