@@ -14,7 +14,7 @@ MASTERS = ['tliff.users.quakenet.org']
 
 require './config.rb'
 $urls = []
-$done_tweets
+$done_tweets = []
 
 def check_link url
   puts "checking #{url}"
