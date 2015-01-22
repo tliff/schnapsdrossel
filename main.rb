@@ -41,6 +41,7 @@ bot = Cinch::Bot.new do
     c.user = 'schnapsdrossel'
     c.channels = ["#bar"]
     c.nicks = ['schnapsdrossel']
+    c.encode ="utf-8"
   end
 
   on :channel do |m|
