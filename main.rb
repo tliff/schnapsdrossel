@@ -7,6 +7,7 @@ require 'socket'
 require 'pp'
 require 'open-uri'
 require 'nokogiri'
+require 'htmlentities'
 
 MAX_SIZE = 1024*1024*10
 HTTP_REGEX = /(http[s]?:\/\/\S+)/
@@ -89,9 +90,9 @@ bot = Cinch::Bot.new do
             if !$done_tweets.member?(message.id)
               $done_tweets << message.id
               puts "Tweet by #{message.user.name}: #{message.text}"
-              Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{message.full_text}" if message.retweeted_status.is_a?(Twitter::NullObject)
+              Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{HTMLEntities.new.decode message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
               if !message.retweeted_status.is_a?(Twitter::NullObject) && !$done_tweets.member?(message.retweeted_status.id)
-                Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.full_text}" 
+                Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{HTMLEntities.new.decode message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" 
               end
             end
           end
