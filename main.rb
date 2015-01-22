@@ -14,6 +14,7 @@ MASTERS = ['tliff.users.quakenet.org']
 
 require './config.rb'
 $urls = []
+$done_tweets
 
 def check_link url
   puts "checking #{url}"
@@ -84,9 +85,14 @@ bot = Cinch::Bot.new do
       begin
         $client.user do |message|
           if message.is_a? Twitter::Tweet
-            puts "Tweet by #{message.user.name}: #{message.text}"
-            Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
-            Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" if !message.retweeted_status.is_a?(Twitter::NullObject)
+            if !$done_tweets.member?(message.id)
+              $done_tweets << message.id
+              puts "Tweet by #{message.user.name}: #{message.text}"
+              Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
+              if !message.retweeted_status.is_a?(Twitter::NullObject) && !$done_tweets.member?(message.retweeted_status.id)
+                Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" 
+              end
+            end
           end
         end
       rescue
