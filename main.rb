@@ -92,6 +92,7 @@ bot = Cinch::Bot.new do
               puts "Tweet by #{message.user.name}: #{message.text}"
               Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{HTMLEntities.new.decode message.text}" if message.retweeted_status.is_a?(Twitter::NullObject)
               if !message.retweeted_status.is_a?(Twitter::NullObject) && !$done_tweets.member?(message.retweeted_status.id)
+                $done_tweets << message.retweeted_status.id
                 Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{HTMLEntities.new.decode message.retweeted_status.user.screen_name} #{message.retweeted_status.text}" 
               end
             end
