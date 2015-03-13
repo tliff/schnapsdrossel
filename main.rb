@@ -83,6 +83,13 @@ bot = Cinch::Bot.new do
     artist_name = xml.at_xpath('/album/artist/name').content rescue ''
     m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
+  
+  on :channel, /http[s]?:\/\/twitter.com\/.*\/status\/(\d+)/ do |m, tweetid|
+    tweet = $client.status(tweetid.to_i)
+    if !tweet.is_a?(Twitter::NullObject)
+      Channel('#bar').msg "Tweet by @#{tweet.user.screen_name} (#{tweet.user.name}): #{HTMLEntities.new.decode tweet.text}".strip.gsub(/\n/, ' | ')
+    end
+  end
 
   on :connect do |m|
     puts "On connect"
