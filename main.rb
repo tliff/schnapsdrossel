@@ -64,7 +64,7 @@ bot = Cinch::Bot.new do
   end
   
   on :channel, /spotify(.com?)[:\/]track[:\/](.*)/ do |_, _, track|
-    xml = Nokogiri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
+    xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:track:#{track}").read)
     xml.remove_namespaces!
     track_name = xml.at_xpath('/track/name').content rescue ''
     artist_name = xml.at_xpath('/track/artist/name').content rescue ''
@@ -72,7 +72,7 @@ bot = Cinch::Bot.new do
   end
 
   on :channel, /spotify(.com?)[:\/]album[:\/](.*)/ do |_, _, track|
-    xml = Nokogiri::XML(open('http://ws.spotify.com/lookup/1/?uri='+track).read)
+    xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:album:#{track}").read)
     xml.remove_namespaces!
     track_name = xml.at_xpath('/album/name').content rescue ''
     artist_name = xml.at_xpath('/album/artist/name').content rescue ''
