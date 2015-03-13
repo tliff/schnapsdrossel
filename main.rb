@@ -63,6 +63,11 @@ bot = Cinch::Bot.new do
     end
   end
   
+  on :channel, /(http[s]?:\/\/youtu[\.]?be)/ do |m, url|
+    title = Nokogiri::HTML(open(url)).title.gsub(/ - YouTube$/, '')
+    m.channel.msg("YouTube video: #{title}")
+  end
+  
   on :channel, /spotify(.com?)[:\/]track[:\/](.*)/ do |m, _, track|
     xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:track:#{track}").read)
     xml.remove_namespaces!
