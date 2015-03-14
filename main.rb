@@ -63,7 +63,7 @@ bot = Cinch::Bot.new do
     end
   end
   
-  on :channel, /(http[s]?:\/\/.*youtu[\.]?be\S+)/ do |m, url|
+  on :channel, %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)! do |m, url|
     title = Nokogiri::HTML(open(url)).title.gsub(/ - YouTube$/, '')
     m.channel.msg("YouTube video: #{title}")
   end
