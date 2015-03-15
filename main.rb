@@ -10,8 +10,8 @@ require 'nokogiri'
 require 'yaml'
 require 'htmlentities'
 
-MAX_SIZE = 1024*1024*10
-HTTP_REGEX = /(http[s]?:\/\/\S+)/
+MAX_SIZE = 1024 * 1024 * 10
+HTTP_REGEX = %r(http[s]?://\S+)%
 MASTERS = ['tliff.users.quakenet.org']
 
 require './config.rb'
@@ -20,8 +20,8 @@ $done_tweets = []
 
 $definitions = {}
 
-if File.exists?('definitions.yml')
-  $definitions = YAML::load(File.open('definitions.yml'))
+if File.exist?('definitions.yml')
+  $definitions = YAML.load(File.open('definitions.yml'))
 end
 
 def check_link url
