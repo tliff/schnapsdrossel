@@ -7,6 +7,7 @@ require 'socket'
 require 'pp'
 require 'open-uri'
 require 'nokogiri'
+require 'yaml'
 require 'htmlentities'
 
 MAX_SIZE = 1024*1024*10
@@ -16,6 +17,12 @@ MASTERS = ['tliff.users.quakenet.org']
 require './config.rb'
 $urls = []
 $done_tweets = []
+
+$definitions = {}
+
+if File.exists?('definitions.yml')
+  $definitions = YAML::load(File.open('definitions.yml'))
+end
 
 def check_link url
   puts "checking #{url}"
@@ -40,7 +47,7 @@ bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.quakenet.org"
     c.user = 'schnapsdrossel'
-    c.channels = ["#bar"]
+    c.channels = ["#bartest"]
     c.nicks = ['schnapsdrossel']
     c.encode ="utf-8"
   end
@@ -56,6 +63,19 @@ bot = Cinch::Bot.new do
       exit 0
     end
   end
+  
+  on :channel, /\.define\s+(\w+)\s+(.*)/ do |m, verb, action|
+    if MASTERS.member?(m.user.host)
+      $definitions[verb] = action
+      File.write('definitions.yml', $definitions.to_yaml)
+    end
+  end
+  
+  on :channel, /\!(\w+)\s*(.*)/ do |m, verb, arguments|
+    if definition = $definitions[verb]
+      m.channel.msg("#{definition} #{arguments.lstrip}")
+    end
+  end 
   
   on :channel, /^\.eval / do |m|
     if MASTERS.member?(m.user.host)
