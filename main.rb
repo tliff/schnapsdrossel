@@ -11,7 +11,7 @@ require 'yaml'
 require 'htmlentities'
 
 MAX_SIZE = 1024 * 1024 * 10
-HTTP_REGEX = %r(http[s]?://\S+)%
+HTTP_REGEX = %r{(http[s]?://\S+)}
 MASTERS = ['tliff.users.quakenet.org']
 
 require './config.rb'
