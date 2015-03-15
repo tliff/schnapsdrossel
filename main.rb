@@ -47,7 +47,7 @@ bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.quakenet.org"
     c.user = 'schnapsdrossel'
-    c.channels = ["#bartest"]
+    c.channels = ["#bar"]
     c.nicks = ['schnapsdrossel']
     c.encode ="utf-8"
   end
