@@ -3,12 +3,21 @@ require 'net/http'
 require 'uri'
 require 'twitter'
 require 'tumblr_client'
-require 'socket'
 require 'pp'
 require 'open-uri'
-require 'nokogiri'
 require 'yaml'
 require 'htmlentities'
+
+$:.unshift File.expand_path( '../lib', __FILE__ )
+
+require 'tumblr_lib.rb'
+require 'twitter_lib.rb'
+require 'spotify_lib.rb'
+require 'definitions_lib.rb'
+
+module Schnapsdrossel
+  
+end
 
 MAX_SIZE = 1024 * 1024 * 10
 HTTP_REGEX = %r{(http[s]?://\S+)}
@@ -87,23 +96,7 @@ bot = Cinch::Bot.new do
     title = Nokogiri::HTML(open(url)).title.gsub(/ - YouTube$/, '')
     m.channel.msg("YouTube: #{title}")
   end
-  
-  on :channel, /spotify(.com?)[:\/]track[:\/](.*)/ do |m, _, track|
-    xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:track:#{track}").read)
-    xml.remove_namespaces!
-    track_name = xml.at_xpath('/track/name').content rescue ''
-    artist_name = xml.at_xpath('/track/artist/name').content rescue ''
-    m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
-  end
 
-  on :channel, /spotify(.com?)[:\/]album[:\/](.*)/ do |m, _, track|
-    xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:album:#{track}").read)
-    xml.remove_namespaces!
-    track_name = xml.at_xpath('/album/name').content rescue ''
-    artist_name = xml.at_xpath('/album/artist/name').content rescue ''
-    m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
-  end
-  
   on :channel, /http[s]?:\/\/twitter.com\/.*\/status\/(\d+)/ do |m, tweetid|
     tweet = $client.status(tweetid.to_i)
     if !tweet.is_a?(Twitter::NullObject)
