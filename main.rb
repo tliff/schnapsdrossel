@@ -83,12 +83,12 @@ bot = Cinch::Bot.new do
     end
   end
   
-  on :channel, %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)! do |m, url|
+  on :channel, %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i do |m, url|
     title = Nokogiri::HTML(open(url)).title.gsub(/ - YouTube$/, '')
     m.channel.msg("YouTube: #{title}")
   end
   
-  on :channel, /spotify(.com?)[:\/]track[:\/](.*)/ do |m, _, track|
+  on :channel, /spotify(.com?)[:\/]track[:\/](.*)/i do |m, _, track|
     xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:track:#{track}").read)
     xml.remove_namespaces!
     track_name = xml.at_xpath('/track/name').content rescue ''
@@ -96,7 +96,7 @@ bot = Cinch::Bot.new do
     m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
 
-  on :channel, /spotify(.com?)[:\/]album[:\/](.*)/ do |m, _, track|
+  on :channel, /spotify(.com?)[:\/]album[:\/](.*)/i do |m, _, track|
     xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:album:#{track}").read)
     xml.remove_namespaces!
     track_name = xml.at_xpath('/album/name').content rescue ''
@@ -104,7 +104,7 @@ bot = Cinch::Bot.new do
     m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
   end
   
-  on :channel, /http[s]?:\/\/twitter.com\/.*\/status\/(\d+)/ do |m, tweetid|
+  on :channel, /http[s]?:\/\/twitter.com\/.*\/status\/(\d+)/i do |m, tweetid|
     tweet = $client.status(tweetid.to_i)
     if !tweet.is_a?(Twitter::NullObject)
       Channel('#bar').msg "Tweet by @#{tweet.user.screen_name} (#{tweet.user.name}): #{HTMLEntities.new.decode tweet.text}".strip.gsub(/\n/, ' | ')
