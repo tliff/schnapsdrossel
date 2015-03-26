@@ -1,133 +1,61 @@
 require 'cinch'
-require 'net/http'
+require 'open-uri'
 require 'uri'
 require 'twitter'
-require 'tumblr_client'
 require 'pp'
-require 'open-uri'
 require 'yaml'
 require 'htmlentities'
 
 $:.unshift File.expand_path( '../lib', __FILE__ )
 
-require 'tumblr_lib.rb'
-require 'twitter_lib.rb'
-require 'spotify_lib.rb'
-require 'definitions_lib.rb'
+require 'tumblr_plugin.rb'
+require 'twitter_plugin.rb'
+require 'spotify_plugin.rb'
+require 'youtube_plugin.rb'
+require 'definitions_plugin.rb'
 
 module Schnapsdrossel
   
-end
+  access_checker = -> (user) {
+    user.host == 'tliff.users.quakenet.org' 
+  }
 
-MAX_SIZE = 1024 * 1024 * 10
-HTTP_REGEX = %r{(http[s]?://\S+)}
-MASTERS = ['tliff.users.quakenet.org']
-
-require './config.rb'
-$urls = []
-$done_tweets = []
-
-$definitions = {}
-
-if File.exist?('definitions.yml')
-  $definitions = YAML.load(File.open('definitions.yml'))
-end
-
-def check_link url
-  puts "checking #{url}"
-  if $urls.member?(url)
-    puts "Already posted"
-    return
-  end
-  uri = URI(url)
-  Net::HTTP.start(uri.host) do |http|
-    http.open_timeout = 2
-    http.read_timeout = 2
-    req = Net::HTTP::Head.new("#{uri.path}#{uri.query ? '?' + uri.query : ''}")
-    req = http.request(req)
-    if req['content-length'].to_i < MAX_SIZE && (req['content-type'] =~ /^image/ || req['content-type'] =~ /^video\/webm/ )
-      Tumblr::Client.new.text('shitmybarsays.tumblr.com', :body => "![Alt text](#{url})", :format => "markdown")
-      $urls << url
+  bot = Cinch::Bot.new do
+    configure do |c|
+      YAML.load(File.read('config/bot.yml')).each do |k,v|
+        c.send("#{k}=".to_sym, v)
+      end
+      c.plugins.plugins = [
+        SpotifyPlugin,
+        DefinitionsPlugin,
+        TumblrPlugin,
+        TwitterPlugin,
+        YoutubePlugin
+      ]
+      c.plugins.options = {
+        DefinitionsPlugin => {
+          access_checker: access_checker
+        },
+        TumblrPlugin => YAML.load(File.read('config/tumblr.yml')),
+        TwitterPlugin => {twitter: YAML.load(File.read('config/twitter.yml')), channel: c.channels.first},
+      }
     end
-  end
-end
 
-bot = Cinch::Bot.new do
-  configure do |c|
-    c.server = "irc.quakenet.org"
-    c.user = 'schnapsdrossel'
-    c.channels = ["#bar"]
-    c.nicks = ['schnapsdrossel']
-    c.encode ="utf-8"
-  end
-
-  on :channel do |m|
-    m.message.scan(HTTP_REGEX){|match|
-      check_link match.first
-    }
-  end
+    on :channel, /^\.reload$/ do |m|
+      exit 0 if access_checker.call(m.user)
+    end
   
-  on :channel, /^\.reload$/ do |m|
-    if MASTERS.member?(m.user.host)
-      exit 0
-    end
-  end
-  
-  on :channel, /\.define\s+(\w+)\s+(.*)/ do |m, verb, action|
-    if MASTERS.member?(m.user.host)
-      $definitions[verb] = action
-      File.write('definitions.yml', $definitions.to_yaml)
-    end
-  end
-  
-  on :channel, /\!(\w+)\s*(.*)/ do |m, verb, arguments|
-    if definition = $definitions[verb]
-      m.channel.msg("#{definition} #{arguments.lstrip}")
-    end
-  end 
-  
-  on :channel, /^\.eval / do |m|
-    if MASTERS.member?(m.user.host)
-      m.channel.msg eval(m.message.gsub(/^\.eval /,''))
-    end
-  end
-  
-  on :channel, %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)! do |m, url|
-    title = Nokogiri::HTML(open(url)).title.gsub(/ - YouTube$/, '')
-    m.channel.msg("YouTube: #{title}")
-  end
-
-  on :channel, /http[s]?:\/\/twitter.com\/.*\/status\/(\d+)/ do |m, tweetid|
-    tweet = $client.status(tweetid.to_i)
-    if !tweet.is_a?(Twitter::NullObject)
-      Channel('#bar').msg "Tweet by @#{tweet.user.screen_name} (#{tweet.user.name}): #{HTMLEntities.new.decode tweet.text}".strip.gsub(/\n/, ' | ')
-    end
-  end
-
-  on :connect do |m|
-    puts "On connect"
-    loop do
-      begin
-        $client.user do |message|
-          if message.is_a? Twitter::Tweet
-            if !$done_tweets.member?(message.id)
-              $done_tweets << message.id
-              puts "Tweet by #{message.user.name}: #{message.text}"
-              Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): #{HTMLEntities.new.decode message.text}".strip.gsub(/\n/, ' | ') if message.retweeted_status.is_a?(Twitter::NullObject)
-              if !message.retweeted_status.is_a?(Twitter::NullObject) && !$done_tweets.member?(message.retweeted_status.id)
-                $done_tweets << message.retweeted_status.id
-                Channel('#bar').msg "Tweet by @#{message.user.screen_name} (#{message.user.name}): RT #{HTMLEntities.new.decode message.retweeted_status.user.screen_name} #{message.retweeted_status.text}".strip.gsub(/\n/, ' | ')
-              end
-            end
-          end
-        end
-      rescue
-        next
+    on :channel, /^\.eval / do |m|
+      if access_checker.call(m.user)
+        m.channel.msg eval(m.message.gsub(/^\.eval /,''))
       end
     end
-  end
-end
 
-bot.start
+  end
+
+
+  bot.start
+  
+end
 
 
