@@ -4,9 +4,9 @@ require 'nokogiri'
 module Schnapsdrossel
   class YoutubePlugin
     include Cinch::Plugin
-  
+
     match %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i, use_prefix: false
-    
+
     def execute(m, url)
       data = Nokogiri::HTML(open(url))
       title = data.title.gsub(/ - YouTube$/, '')
