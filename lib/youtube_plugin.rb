@@ -8,7 +8,7 @@ module Schnapsdrossel
     match %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i, use_prefix: false
 
     def execute(m, url)
-      data = Nokogiri::HTML(open(url))
+      data = Nokogiri::HTML(open(url).read)
       title = data.title.gsub(/ - YouTube$/, '')
       duration = nil
       data.css('[itemprop="duration"]').first['content'].gsub(/PT(\d+)M(\d+)S/) do |_|
