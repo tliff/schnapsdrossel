@@ -11,7 +11,7 @@ module Schnapsdrossel
       xml.remove_namespaces!
       track_name = xml.at_xpath("/#{type}/name").content rescue ''
       artist_name = xml.at_xpath("/#{type}/artist/name").content rescue ''
-      m.channel.msg("#{artist_name} - #{track_name}") if !track_name.empty? && !artist_name.empty?
+      m.channel.msg("#{artist_name} — #{track_name}") if !track_name.empty? && !artist_name.empty?
     end
   end
 end
