@@ -15,9 +15,13 @@ require 'youtube_plugin.rb'
 require 'definitions_plugin.rb'
 
 module Schnapsdrossel
-  
+  ALLOWED_HOSTS = [
+    'tliff.users.quakenet.org',
+    'gix-.users.quakenet.org'
+  ].freeze
+
   access_checker = -> (user) {
-    user.host == 'tliff.users.quakenet.org' 
+    ALLOWED_HOSTS.include?(user.host)
   }
 
   bot = Cinch::Bot.new do
