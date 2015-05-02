@@ -4,7 +4,7 @@ module Schnapsdrossel
   class SpotifyPlugin
     include Cinch::Plugin
   
-    match /spotify(.com?)[:\/](track|album)[:\/](.*)/, use_prefix: false
+    match /spotify(\.com)?[:\/](track|album)[:\/](.*)/, use_prefix: false
   
     def execute(m, _, type, identifier)
       xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:#{type}:#{identifier}").read)
