@@ -5,9 +5,13 @@ module Schnapsdrossel
   class TumblrPlugin
     include Cinch::Plugin
     MAX_SIZE = 1024 * 1024 * 10
-  
+
     match %r{(http[s]?://\S+)}, use_prefix: false
-    
+
+    def initialize
+      @urls = []
+    end
+
     def execute(m, url)
       unless @urls.member?(url)
         uri = URI(url)
