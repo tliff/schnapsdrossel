@@ -8,7 +8,8 @@ module Schnapsdrossel
 
     match %r{(http[s]?://\S+)}, use_prefix: false
 
-    def initialize
+    def initialize(args)
+      super args
       @urls = []
     end
 
