@@ -8,6 +8,11 @@ module Schnapsdrossel
     match %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i, use_prefix: false
 
     def execute(m, url)
+      urls = m.scan(m)
+      m.channel.msg("Youtube: #{urls.map{|url| video_data(url)}.join(' | ')}")
+    end
+
+    def video_data(url)
       data = Nokogiri::HTML(open(url).read)
       title = data.title.gsub(/ - YouTube$/, '')
       duration = nil
@@ -19,7 +24,7 @@ module Schnapsdrossel
           duration = "%.2i:%.2i" % [minutes, seconds]
         end
       end
-      m.channel.msg("YouTube: #{title} (#{duration})")
+      "#{title} (#{duration})"
     end
 
   end
