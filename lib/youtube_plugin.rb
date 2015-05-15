@@ -8,7 +8,7 @@ module Schnapsdrossel
     match %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i, use_prefix: false
 
     def execute(m, url)
-      urls = m.scan(m)
+      urls = m.scan(m.message)
       m.channel.msg("Youtube: #{urls.map{|url| video_data(url)}.join(' | ')}")
     end
 
