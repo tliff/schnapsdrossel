@@ -4,11 +4,11 @@ require 'nokogiri'
 module Schnapsdrossel
   class YoutubePlugin
     include Cinch::Plugin
-
-    match %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i, use_prefix: false
+    REGEX =  %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i
+    match REGEX, use_prefix: false
 
     def execute(m, url)
-      urls = m.scan(m.message)
+      urls = m.message.scan(REGEX)
       m.channel.msg("Youtube: #{urls.map{|url| video_data(url)}.join(' | ')}")
     end
 
