@@ -11,6 +11,11 @@ module Schnapsdrossel
     def initialize(args)
       super args
       @urls = []
+      Tumblr.configure do |conf|
+        config.each do |k,v|
+          conf.send("#{k}=".to_sym, v)
+        end
+      end
     end
 
     def execute(m, url)
