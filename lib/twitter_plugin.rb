@@ -7,8 +7,8 @@ module Schnapsdrossel
 
     listen_to :connect, method: :setup_listener
 
-    match /define\s+(\w+)\s+(.*)/, prefix: '.', method: :define
-    match /\!(\w+)\s*(.*)/, use_prefix: false
+    #match /define\s+(\w+)\s+(.*)/, prefix: '.', method: :define
+    #match /\!(\w+)\s*(.*)/, use_prefix: false
 
     def execute
       
