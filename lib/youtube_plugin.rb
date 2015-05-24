@@ -9,7 +9,7 @@ module Schnapsdrossel
 
     def execute(m, url)
       urls = m.message.scan(REGEX)
-      m.channel.msg("Youtube: #{urls.map{|url| video_data(url)}.join(' | ')}")
+      m.channel.msg("Youtube: #{urls.map{|url| video_data(url.first)}.join(' | ')}")
     end
 
     def video_data(url)
