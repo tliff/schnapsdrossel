@@ -38,8 +38,8 @@ module Schnapsdrossel
                 end
               end
             end
-            #rescue
-            #next
+          rescue StandardError => e
+            Channel(config[:channel]).msg e.to_s
           end
         end
       end
