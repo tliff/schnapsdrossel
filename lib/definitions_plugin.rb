@@ -28,7 +28,7 @@ module Schnapsdrossel
       if @access_checker.call(m.user)
         @definitions[verb] = action
         File.write(DEFINITION_FILE, @definitions.to_yaml)
-        m.channel.msg("#{verb} updated")
+        m.reply("!#{verb} updated")
       end
     end
 
