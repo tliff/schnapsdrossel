@@ -46,9 +46,13 @@ module Schnapsdrossel
     end
 
     on :channel, /^\.reload$/ do |m|
+      @bot.quit("brb") if access_checker.call(m.user)
+    end
+
+    on :channel, /^\.die$/ do |m|
       exit 0 if access_checker.call(m.user)
     end
-  
+
     on :channel, /^\.eval / do |m|
       if access_checker.call(m.user)
         m.channel.msg eval(m.message.gsub(/^\.eval /,''))
