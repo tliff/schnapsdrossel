@@ -17,7 +17,8 @@ require 'definitions_plugin.rb'
 module Schnapsdrossel
   ALLOWED_HOSTS = [
     'tliff.users.quakenet.org',
-    'gix-.users.quakenet.org'
+    'gix-.users.quakenet.org',
+    'Raim-I.users.quakenet.org'
   ].freeze
 
   access_checker = -> (user) {
