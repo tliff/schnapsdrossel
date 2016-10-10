@@ -1,4 +1,4 @@
-require 'nokogiri'
+require 'json'
 
 module Schnapsdrossel
   class SpotifyPlugin
@@ -7,11 +7,10 @@ module Schnapsdrossel
     match /spotify(\.com)?[:\/](track|album)[:\/](.*)/, use_prefix: false
 
     def execute(m, _, type, identifier)
-      xml = Nokogiri::XML(open("http://ws.spotify.com/lookup/1/?uri=spotify:#{type}:#{identifier}").read)
-      xml.remove_namespaces!
-      track_name = xml.at_xpath("/#{type}/name").content rescue ''
-      artist_name = xml.at_xpath("/#{type}/artist/name").content rescue ''
-      m.channel.msg("#{artist_name} — #{track_name}") if !track_name.empty? && !artist_name.empty?
+      doc = JSON.parse(open("https://api.spotify.com/v1/#{type}s/#{identifier}").read)
+      artist = doc['artists'].map{|artist| artist['name']}.join(", ")
+      title = doc['name']
+      m.channel.msg("#{artist} — #{title}") if !title.empty? && !artist.empty?
     end
 
   end
