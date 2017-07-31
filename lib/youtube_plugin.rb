@@ -14,7 +14,7 @@ module Schnapsdrossel
 
     def video_data(url)
       data = Nokogiri::HTML(open(url).read)
-      title = data.title.gsub(/ - YouTube$/, '')
+      title = data.css('meta[property="og:title"]').first['content']
       duration = nil
       data.css('[itemprop="duration"]').first['content'].gsub(/PT(\d+)M(\d+)S/) do |_|
         minutes, seconds = $1.to_i, $2.to_i
