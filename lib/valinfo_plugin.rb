@@ -16,7 +16,7 @@ module Schnapsdrossel
       begin
         Timeout::timeout(1) do
           response = client.recv(1024)
-          name, name, game, playercount, strange_version, real_version = response.unpack("x6Z*Z*Z*Lx6Z*x11Z*x8")
+          name, name, game, playercount, strange_version, real_version = response.unpack("x6Z*Z*Z*L>x6Z*x11Z*x8")
           m.channel.msg("#{name} (#{IPSocket.getaddress(SERVER)}:2456) is online running version #{real_version}. #{playercount} viking#{playercount != 1 ? "s" : ""} online.")
         end
       rescue
