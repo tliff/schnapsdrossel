@@ -13,6 +13,7 @@ require 'twitter_plugin.rb'
 require 'spotify_plugin.rb'
 require 'youtube_plugin.rb'
 require 'definitions_plugin.rb'
+require 'valinfo_plugin.rb'
 
 module Schnapsdrossel
   ALLOWED_HOSTS = [
@@ -35,7 +36,8 @@ module Schnapsdrossel
         DefinitionsPlugin,
         TumblrPlugin,
         TwitterPlugin,
-        YoutubePlugin
+        YoutubePlugin,
+        ValinfoPlugin
       ]
       c.plugins.options = {
         DefinitionsPlugin => {
