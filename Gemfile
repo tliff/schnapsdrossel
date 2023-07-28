@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
 gem 'cinch'
-gem 'tumblr_client'
 gem 'nokogiri'
 gem 'htmlentities'

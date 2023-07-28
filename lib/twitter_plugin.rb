@@ -8,7 +8,7 @@ module Schnapsdrossel
     match REGEX, use_prefix: false
 
     def execute(m, url)
-      urls = m.message.scan(REGEX)
+      urls = m.message.scan(REGEX).flatten
       m.channel.msg("Nitter: #{urls.map{|url| url.gsub(%r!(?:www\.)?(?:x|twitter).com/!, 'nitter.net/')}.join(' ')}")
     end
 
