@@ -1,7 +1,6 @@
 require 'cinch'
 require 'open-uri'
 require 'uri'
-require 'twitter'
 require 'pp'
 require 'yaml'
 require 'htmlentities'
