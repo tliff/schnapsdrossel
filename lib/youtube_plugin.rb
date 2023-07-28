@@ -4,7 +4,7 @@ require 'nokogiri'
 module Schnapsdrossel
   class YoutubePlugin
     include Cinch::Plugin
-    REGEX =  %r!(?:\A|\s)(https?://\S*youtu[\.]?be\S+)(?:\z|\s)!i
+    REGEX =  %r!(?<=\A|\s)(https?://\S*youtu[\.]?be\S+)(?=\z|\s)!i
     match REGEX, use_prefix: false
 
     def execute(m, url)
