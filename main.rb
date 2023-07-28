@@ -44,7 +44,7 @@ module Schnapsdrossel
           access_checker: access_checker
         },
         TumblrPlugin => YAML.load(File.read('config/tumblr.yml')),
-        TwitterPlugin => {twitter: YAML.load(File.read('config/twitter.yml')), channel: c.channels.first},
+        TwitterPlugin => {channel: c.channels.first},
       }
     end
 
