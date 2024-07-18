@@ -28,9 +28,8 @@ module Schnapsdrossel
       duration = video.duration
       if duration >= 60*60
         duration = "%.2i:%.2i:%.2i" % [duration  / 3600, (duration/60)%60, duration%60]
-        else
-          duration = "%.2i:%.2i" % [(duration/60)%60, duration%60]
-        end
+      else
+        duration = "%.2i:%.2i" % [(duration/60)%60, duration%60]
       end
       "#{title} (#{duration})"
     end
