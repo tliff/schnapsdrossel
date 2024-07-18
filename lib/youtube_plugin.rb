@@ -16,7 +16,7 @@ module Schnapsdrossel
       uri = URI(url)
       video_id = nil
       if uri.path == '/watch'
-        params = u.query.split('&').map{|e| e.split('=', 2)}.to_h
+        params = uri.query.split('&').map{|e| e.split('=', 2)}.to_h
         video_id = params['v']
       else
         video_id = path.gsub('/', '')
