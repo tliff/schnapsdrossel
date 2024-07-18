@@ -19,7 +19,7 @@ module Schnapsdrossel
         params = uri.query.split('&').map{|e| e.split('=', 2)}.to_h
         video_id = params['v']
       else
-        video_id = path.gsub('/', '')
+        video_id = uri.path.gsub('/', '')
       end
 
       video = Yt::Video.new(id: video_id)
