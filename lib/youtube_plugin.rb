@@ -1,5 +1,5 @@
 require 'open-uri'
-require 'nokogiri'
+require 'yt'
 
 module Schnapsdrossel
   class YoutubePlugin
@@ -13,15 +13,23 @@ module Schnapsdrossel
     end
 
     def video_data(url)
-      data = Nokogiri::HTML(open(url).read)
-      title = data.css('meta[property="og:title"]').first['content']
-      duration = nil
-      data.css('[itemprop="duration"]').first['content'].gsub(/PT(\d+)M(\d+)S/) do |_|
-        minutes, seconds = $1.to_i, $2.to_i
-        if minutes >= 60
-          duration = "%.2i:%.2i:%.2i" % [minutes / 60, minutes % 60, seconds]
+      uri = URI(url)
+      video_id = nil
+      if uri.path == '/watch'
+        params = u.query.split('&').map{|e| e.split('=', 2)}.to_h
+        video_id = params['v']
+      else
+        video_id = path.gsub('/', '')
+      end
+
+      video = Yt::Video.new(id: video_id)
+
+      title = video.title
+      duration = video.duration
+      if duration >= 60*60
+        duration = "%.2i:%.2i:%.2i" % [duration  / 3600, (duration/60)%60, duration%60]
         else
-          duration = "%.2i:%.2i" % [minutes, seconds]
+          duration = "%.2i:%.2i" % [(duration/60)%60, duration%60]
         end
       end
       "#{title} (#{duration})"
