@@ -13,6 +13,8 @@ require 'youtube_plugin.rb'
 require 'definitions_plugin.rb'
 require 'valinfo_plugin.rb'
 
+require './config.rb'
+
 module Cinch
   module Utilities
     # @since 2.0.0
@@ -51,7 +53,7 @@ module Cinch
 end
 
 
-class CinchLogger 
+class CinchLogger
   def method_missing(name, *arg)
     pp arg
   end
@@ -75,7 +77,7 @@ module Schnapsdrossel
       YAML.load(File.read('config/bot.yml')).each do |k,v|
         c.send("#{k}=".to_sym, v)
       end
-      
+
       c.plugins.plugins = [
         SpotifyPlugin,
         DefinitionsPlugin,
@@ -109,7 +111,5 @@ module Schnapsdrossel
   end
 
   bot.start
-  
+
 end
-
-
