@@ -20,21 +20,33 @@ GEM
     htmlentities (4.3.4)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
-    mini_portile2 (2.8.7)
     minitest (5.24.1)
     mutex_m (0.2.0)
-    nokogiri (1.15.3)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.16.6-aarch64-linux)
       racc (~> 1.4)
-    racc (1.7.1)
+    nokogiri (1.16.6-arm-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.6-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.6-x86-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.6-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.6-x86_64-linux)
+      racc (~> 1.4)
+    racc (1.8.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     yt (0.33.4)
       activesupport
 
 PLATFORMS
-  x86_64-darwin-22
-  x86_64-darwin-23
+  aarch64-linux
+  arm-linux
+  arm64-darwin
+  x86-linux
+  x86_64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   cinch
@@ -43,4 +55,4 @@ DEPENDENCIES
   yt
 
 BUNDLED WITH
-   2.4.6
+   2.5.11
