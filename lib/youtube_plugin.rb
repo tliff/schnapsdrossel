@@ -18,7 +18,7 @@ module Schnapsdrossel
       if uri.path == '/watch'
         params = uri.query.split('&').map{|e| e.split('=', 2)}.to_h
         video_id = params['v']
-      elsif uri.path == '/shorts/'
+      elsif uri.path.start_with?('/shorts/')
         video_id = uri.path.delete_prefix('/shorts/')
       else
         video_id = uri.path.gsub('/', '')
