@@ -20,6 +20,8 @@ module Schnapsdrossel
         video_id = params['v']
       elsif uri.path.start_with?('/shorts/')
         video_id = uri.path.delete_prefix('/shorts/')
+      elsif uri.path.start_with?('/live/')
+        video_id = uri.path.delete_prefix('/live/')       
       else
         video_id = uri.path.gsub('/', '')
       end
