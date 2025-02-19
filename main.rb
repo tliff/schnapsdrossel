@@ -8,6 +8,7 @@ require 'logger'
 
 $:.unshift File.expand_path( '../lib', __FILE__ )
 
+require 'twitter_plugin.rb'
 require 'spotify_plugin.rb'
 require 'youtube_plugin.rb'
 require 'definitions_plugin.rb'
@@ -81,6 +82,7 @@ module Schnapsdrossel
       c.plugins.plugins = [
         SpotifyPlugin,
         DefinitionsPlugin,
+        TwitterPlugin,
         YoutubePlugin,
         ValinfoPlugin
       ]
@@ -88,6 +90,7 @@ module Schnapsdrossel
         DefinitionsPlugin => {
           access_checker: access_checker
         },
+        TwitterPlugin => {channel: c.channels.first},
       }
     end
     bot.loggers = CinchLogger.new
